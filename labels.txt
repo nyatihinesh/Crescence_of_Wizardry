@@ -1,0 +1,6 @@
+0 Alohomora
+1 Avada Kedavra
+2 Expecto Patronum
+3 Expelliarmus
+4 Silencio
+5 Sonorus
