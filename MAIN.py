@@ -19,7 +19,7 @@ import cvzone                                      # cvzone simplifies computer 
 from cvzone.HandTrackingModule import HandDetector # Module to detect hands using computer vision
 from cvzone.ClassificationModule import Classifier # Module for classification tasks using pre-trained models
 import numpy as np                                 # For numerical operations on arrays
-import threading, random, playsound                # threading for concurrency, random for randomness, playsound for playing sound files
+import random, playsound                # threading for concurrency, random for randomness, playsound for playing sound files
 from pyfirmata import Arduino, SERVO               # For interfacing with Arduino boards and controlling servo motors
 from time import sleep                             # sleep to pause program execution
 
@@ -206,13 +206,13 @@ def playGame():
     # =============================================================================
     # LOAD IMAGES
     # =============================================================================
-    snake_head_image = pygame.image.load('/__resources/snake_head.png')
+    snake_head_image = pygame.image.load('__resources/snake_head.png')
     snake_head_image = pygame.transform.scale(snake_head_image, (60, 60))
-    game_over_img = pygame.image.load('/__resources/GAME_OVER.png')
+    game_over_img = pygame.image.load('__resources/GAME_OVER.png')
     game_over_img = pygame.transform.scale(game_over_img, (window_width, window_height))
-    enemy_image = pygame.image.load('/__resources/enemy.png')
+    enemy_image = pygame.image.load('__resources/enemy.png')
     enemy_image = pygame.transform.scale(enemy_image, (45, 45))
-    death_eater_image = pygame.image.load("/__resources/death_eater.png")
+    death_eater_image = pygame.image.load("__resources/death_eater.png")
     death_eater_image = pygame.transform.scale(death_eater_image, (60, 60))
 
     # =============================================================================
@@ -333,7 +333,7 @@ def open_and_close_box():
     music, uses text-to-speech to notify the user, and then terminates the program gracefully.
     """
     try:
-        board = Arduino("COM4")
+        board = Arduino("COM4") #Change as per requirement
         board.digital[9].mode = SERVO
 
         def rotateservo(pin, angle):
@@ -458,6 +458,8 @@ def wizardry_m():
                     pygame.mixer.music.pause()
                     playsound.playsound("__resources/expecto-patronum.mp3")
                     a = playGame()
+                    pygame.mixer.init()
+                    pygame.mixer.music.load("__resources/bgm.mp3")
                     pygame.mixer.music.play()
                     if a == True:
                         pygame.mixer.music.pause()
@@ -475,7 +477,9 @@ def wizardry_m():
                 if str(labels[confidence]) == "Silencio":
                     playsound.playsound("__resources/SilencioSonorous.mp3")
                     pygame.mixer.music.pause()
-                if str(labels[confidence]) == "Sonorous":
+                if str(labels[confidence]) == "Sonorus":
+                    # pygame.mixer.init()qqqqqqqqqq
+                    # pygame.mixer.music.load("__resources/bgm.mp3")
                     playsound.playsound("__resources/SilencioSonorous.mp3")
                     pygame.mixer.music.play()
 
@@ -599,7 +603,8 @@ def sorting_hat():
 
     while True:
         success, img = cap.read()
-        hands, img = detector.findHands(img, draw=False)
+        hands, img = detector.findHands(img, draw=True,flipType=True)
+        img=cv.flip(img,flipCode=1)
         if qNo < qTotal:
             mcq_item = mcqlist[qNo]
             img, bbox = cvzone.putTextRect(img, mcq_item.question, [100, 100], 2, 2, offset=30, border=3)
@@ -630,6 +635,7 @@ def sorting_hat():
         cv.rectangle(img, (150, 600 - 100), (barValue, 650 - 100), (0, 255, 0), cv.FILLED)
         cv.rectangle(img, (150, 600 - 100), (1100, 650 - 100), (0, 255, 0), 5)
         img, _ = cvzone.putTextRect(img, f'{round((qNo / qTotal) * 100)}%', [1130, 635 - 100], 2, 2, offset=16)
+        
         
         cv.imshow("Sorting Hat!", img)
 
